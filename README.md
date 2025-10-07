@@ -1,6 +1,4 @@
-# nodejs-sql-portfolio
-
-Learning Node.js + SQL with Next.js, Stripe, and Firebase.
-This repository is part of my personal portfolio and learning roadmap.
-
----
+## Stripe Mini Payments
+- Next.js + Prisma + Stripe Checkout
+- PostgreSQL (Supabase)
+- Secure environment setup (.env.example included)
