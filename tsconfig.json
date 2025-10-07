@@ -1,0 +1,49 @@
+{
+  "compilerOptions": {
+    // === JavaScript target / libs ===
+    "target": "ES2022",                    // Modern JS output for Next.js runtime
+    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+
+    // === Type safety ===
+    "strict": true,                        // Enable all strict checks
+    "noUnusedLocals": true,               // Report unused locals
+    "noUnusedParameters": true,           // Report unused parameters
+    "noFallthroughCasesInSwitch": true,   // Disallow switch fallthrough
+    "exactOptionalPropertyTypes": true,   // Optional props are truly optional
+    "useUnknownInCatchVariables": true,   // Catch variables typed as unknown
+    "noUncheckedIndexedAccess": true,     // Adds undefined to indexed access
+    "forceConsistentCasingInFileNames": true, // Enforce file name casing on imports
+
+    // === Modules / Resolution ===
+    "module": "ESNext",
+    "moduleResolution": "Bundler",        // Recommended for Next.js + TS5
+    "verbatimModuleSyntax": true,         // Keep import/export syntax as-is
+    "esModuleInterop": true,              // CJS <-> ESM interop
+    "resolveJsonModule": true,            // Allow importing JSON
+    "isolatedModules": true,              // Each file transpiles in isolation
+
+    // === Build behavior ===
+    "noEmit": true,                       // Next handles emitting
+    "incremental": true,                  // Faster subsequent type checks
+    "skipLibCheck": true,                 // Speed up by skipping d.ts checks
+
+    // === Paths / Aliases ===
+    "baseUrl": "src",                     // Make "@/..." resolve from /src
+    "paths": { "@/*": ["*"] },            // e.g. "@/lib/stripeClient"
+
+    // === JSX / Next plugin ===
+    "jsx": "preserve",
+    "plugins": [{ "name": "next" }],
+
+    // === JS files ===
+    "allowJs": false                      // Keep repo TypeScript-only (stricter)
+  },
+
+  // Keep the project focused on app sources
+  "include": [
+    "next-env.d.ts",
+    "src/**/*",
+    ".next/types/**/*.ts"
+  ],
+  "exclude": ["node_modules"]
+}

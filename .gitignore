@@ -1,0 +1,71 @@
+# --- Node.js / Next.js ---
+node_modules/
+.next/
+out/
+dist/
+build/
+
+# --- Package managers (Yarn / pnpm) ---
+.pnp
+.pnp.*
+.pnpm-debug.log*
+.yarn/*
+!.yarn/patches/
+!.yarn/plugins/
+!.yarn/releases/
+!.yarn/versions/
+!.yarnrc.yml
+
+# --- Environment variables ---
+.env
+.env.local
+.env.*
+.envrc
+
+# --- Deployment (Vercel / Netlify) ---
+.vercel/
+.netlify/
+
+# --- IDE / OS files ---
+.idea/
+*.iml
+.vscode/
+.DS_Store
+Thumbs.db
+
+# --- Logs / caches ---
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.tsbuildinfo
+.cache/
+
+# --- Next.js auto-generated ---
+next-env.d.ts
+
+# --- Prisma ---
+# Keep schema.prisma and migrations, but ignore generated clients
+/prisma/generated/
+/prisma/.prisma/
+
+# --- Database ---
+/*.db
+/*.sqlite
+/*.sqlite-journal
+*.sql
+*.dump
+
+# --- Testing ---
+/junit.xml
+/coverage/
+.nyc_output/
+# （必要なら）Jest 設定は追跡したいので ignore しない:
+#jest.config.js
+#jest.config.ts
+
+# --- Others (optional but useful) ---
+*.bak
+*.swp
+*.swo
+
+.idea/
