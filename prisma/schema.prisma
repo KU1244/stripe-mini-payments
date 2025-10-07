@@ -1,0 +1,12 @@
+// prisma/schema.prisma
+
+// Generate Prisma Client for Node/TS
+generator client {
+  provider = "prisma-client-js"
+}
+
+// DB connection (PostgreSQL). Value comes from .env -> DATABASE_URL
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
