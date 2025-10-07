@@ -1,5 +1,3 @@
-// prisma/schema.prisma
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,12 +7,11 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// Payment records for Stripe Checkout sessions
 model Payment {
-  id              String   @id @default(cuid()) // Unique internal ID
-  stripeSessionId String   @unique // Stripe Checkout Session ID
-  amount          Int // Payment amount (in smallest currency unit, e.g., 500 = ¥500)
-  currency        String   @default("jpy") // Currency code (e.g., "jpy", "usd")
-  status          String // Payment status (e.g., "paid", "unpaid", "canceled")
-  createdAt       DateTime @default(now()) // Record creation timestamp
+  id              String   @id @default(cuid())
+  stripeSessionId String   @unique
+  amount          Int
+  currency        String   @default("jpy")
+  status          String
+  createdAt       DateTime @default(now())
 }

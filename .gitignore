@@ -18,8 +18,6 @@ build/
 
 # --- Environment variables ---
 .env
-.env
-.env
 .envrc
 
 # --- Deployment (Vercel / Netlify) ---
@@ -45,13 +43,13 @@ next-env.d.ts
 
 # --- Prisma ---
 # Keep schema.prisma and migrations, but ignore generated clients
-/prisma/generated/
 /prisma/.prisma/
+#/prisma/generated/   # Uncomment if you generate custom Prisma clients
 
 # --- Database ---
-/*.db
-/*.sqlite
-/*.sqlite-journal
+*.db
+*.sqlite
+*.sqlite-journal
 *.sql
 *.dump
 
@@ -59,7 +57,6 @@ next-env.d.ts
 /junit.xml
 /coverage/
 .nyc_output/
-# （必要なら）Jest 設定は追跡したいので ignore しない:
 #jest.config.js
 #jest.config.ts
 
@@ -67,5 +64,3 @@ next-env.d.ts
 *.bak
 *.swp
 *.swo
-
-.idea/
