@@ -1,17 +1,33 @@
+// -----------------------------
+// Prisma configuration
+// -----------------------------
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client-js" // Generates the Prisma Client (TypeScript ORM)
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider = "postgresql" // Database type: PostgreSQL
+  url      = env("DATABASE_URL") // Connection string (from .env)
 }
 
+// -----------------------------
+// Stripe payment records
+// -----------------------------
 model Payment {
-  id              String   @id @default(cuid())
-  stripeSessionId String   @unique
-  amount          Int
-  currency        String   @default("jpy")
-  status          String
-  createdAt       DateTime @default(now())
+  id              String   @id @default(cuid()) // Unique record ID (auto-generated)
+  stripeSessionId String   @unique // Stripe Checkout Session ID
+  amount          Int // Amount in smallest currency unit (e.g., 500 = $5.00)
+  currency        String   @default("usd") // Currency code (default: USD)
+  status          String // Payment status ('pending', 'paid', 'failed')
+  createdAt       DateTime @default(now()) // When the record was created
+}
+
+// -----------------------------
+// Prevent double submission (click guard)
+// -----------------------------
+model PaymentRequest {
+  id        String   @id @default(cuid()) // Unique record ID for click attempt
+  clientRef String   @unique // Unique token per user click (prevents double submit)
+  status    String   @default("pending") // 'pending' | 'succeeded' | 'failed'
+  createdAt DateTime @default(now()) // Timestamp when the record was created
 }
