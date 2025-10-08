@@ -1,45 +1,48 @@
 {
   "compilerOptions": {
     // === JavaScript target / libs ===
-    "target": "ES2022",                    // Modern JS output for Next.js runtime
-    "lib": ["ES2022", "DOM", "DOM.Iterable"],
+    "target": "ES2022",                    // Output modern JavaScript for Next.js runtime
+    "lib": ["ES2022", "DOM", "DOM.Iterable"], // Include standard DOM and iterable APIs
 
     // === Type safety ===
-    "strict": true,                        // Enable all strict checks
-    "noUnusedLocals": true,               // Report unused locals
-    "noUnusedParameters": true,           // Report unused parameters
-    "noFallthroughCasesInSwitch": true,   // Disallow switch fallthrough
-    "exactOptionalPropertyTypes": true,   // Optional props are truly optional
-    "useUnknownInCatchVariables": true,   // Catch variables typed as unknown
-    "noUncheckedIndexedAccess": true,     // Adds undefined to indexed access
-    "forceConsistentCasingInFileNames": true, // Enforce file name casing on imports
+    "strict": true,                        // Enable all strict type checks
+    "noUnusedLocals": true,                // Warn on unused local variables
+    "noUnusedParameters": true,            // Warn on unused function parameters
+    "noFallthroughCasesInSwitch": true,    // Disallow falling through switch cases
+    "exactOptionalPropertyTypes": true,    // Optional props must be explicitly provided
+    "useUnknownInCatchVariables": true,    // Force explicit typing in catch blocks
+    "noUncheckedIndexedAccess": true,      // Adds 'undefined' when indexing potentially missing values
+    "forceConsistentCasingInFileNames": true, // Enforce consistent file name casing on import paths
 
     // === Modules / Resolution ===
     "module": "ESNext",
-    "moduleResolution": "Bundler",        // Recommended for Next.js + TS5
-    "verbatimModuleSyntax": true,         // Keep import/export syntax as-is
-    "esModuleInterop": true,              // CJS <-> ESM interop
-    "resolveJsonModule": true,            // Allow importing JSON
-    "isolatedModules": true,              // Each file transpiles in isolation
+    "moduleResolution": "Bundler",         // Recommended for Next.js + TypeScript 5
+    "verbatimModuleSyntax": true,          // Preserve modern import/export syntax
+    "esModuleInterop": true,               // Allow CommonJS <-> ESM interop
+    "resolveJsonModule": true,             // Allow importing JSON files
+    "isolatedModules": true,               // Each file transpiles in isolation (Next.js requirement)
 
     // === Build behavior ===
-    "noEmit": true,                       // Next handles emitting
-    "incremental": true,                  // Faster subsequent type checks
-    "skipLibCheck": true,                 // Speed up by skipping d.ts checks
+    "noEmit": true,                        // Next.js handles output emission
+    "incremental": true,                   // Enable faster incremental builds
+    "skipLibCheck": true,                  // Skip .d.ts checking for speed
 
     // === Paths / Aliases ===
-    "baseUrl": "src",                     // Make "@/..." resolve from /src
-    "paths": { "@/*": ["*"] },            // e.g. "@/lib/stripeClient"
+    "baseUrl": "src",                      // Base path for resolving "@/..." imports
+    "paths": { "@/*": ["*"] },             // Example: "@/lib/stripeClient" -> "src/lib/stripeClient"
 
     // === JSX / Next plugin ===
     "jsx": "preserve",
     "plugins": [{ "name": "next" }],
 
+    // === Node.js typings ===
+    "types": ["node"],                     // Include Node.js type definitions (fix Buffer/crypto errors)
+
     // === JS files ===
-    "allowJs": false                      // Keep repo TypeScript-only (stricter)
+    "allowJs": false                       // Keep repo TypeScript-only for consistency
   },
 
-  // Keep the project focused on app sources
+  // === Project scope ===
   "include": [
     "next-env.d.ts",
     "src/**/*",
