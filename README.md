@@ -1,8 +1,3 @@
-完璧なタイミングです✨
-Phase 1 が完成した今の状態に合わせて、README を少し整理＆補強した改訂版を出します。
-以下をそのまま `README.md` に貼り替えてOKです👇
-
----
 
 # 🧾 Stripe Mini Payments
 
