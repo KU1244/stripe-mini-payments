@@ -1,21 +1,20 @@
 // src/lib/security/csrf.ts
-
 import { serialize } from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
-// Import only specific functions from Node's "crypto" to avoid type conflicts
 import { randomBytes, timingSafeEqual } from "crypto";
 
 const CSRF_COOKIE = "csrf_token";
+const isDev = process.env.NODE_ENV !== "production"; // ← 追加：開発判定
 
 // Issue a CSRF token and set cookie (SameSite=Lax)
 export function setCsrfCookie(res: NextApiResponse): string {
     const token = randomBytes(32).toString("hex");
     const cookie = serialize(CSRF_COOKIE, token, {
-        httpOnly: false, // double-submit cookie needs readable cookie
-        secure: true,
+        httpOnly: false,   // double-submit なので読み取り可
+        secure: !isDev,    // ← ここを修正：開発はfalse、本番はtrue
         sameSite: "lax",
         path: "/",
-        maxAge: 60 * 60, // 1h
+        maxAge: 60 * 60,   // 1h
     });
     res.setHeader("Set-Cookie", cookie);
     return token;
@@ -40,12 +39,8 @@ export function verifyCsrf(req: NextApiRequest): boolean {
     const fromHeader = (req.headers["x-csrf-token"] as string) || "";
     if (!fromCookie || !fromHeader) return false;
 
-    // Use Uint8Array (ArrayBufferView) to satisfy timingSafeEqual's signature
-    // TextEncoder is built-in in Node 18+ and avoids Buffer type friction.
     const a = new TextEncoder().encode(fromCookie);
     const b = new TextEncoder().encode(fromHeader);
-
-    // timingSafeEqual throws if byte lengths differ → check first
     if (a.byteLength !== b.byteLength) return false;
 
     return timingSafeEqual(a, b);
