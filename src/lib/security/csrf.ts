@@ -1,5 +1,4 @@
 // src/lib/security/csrf.ts
-// English comments for repo readability
 
 import { serialize } from "cookie";
 import type { NextApiRequest, NextApiResponse } from "next";
