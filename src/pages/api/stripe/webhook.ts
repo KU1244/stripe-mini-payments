@@ -4,14 +4,15 @@ import Stripe from "stripe";
 import { stripe } from "@/lib/stripeClient";
 import { prisma } from "@/lib/prisma";
 import { Prisma } from "@prisma/client";
-import getRawBody from "raw-body"; // 生ボディ取得はこれに統一
+import getRawBody from "raw-body"; // Use raw-body to read raw request data
 
-// ✅ Stripe署名検証は“生ボディ”必須。NextのJSONパーサをOFF
+// Stripe webhook signature verification requires raw body, so disable JSON parser
 export const config = {
     api: { bodyParser: false },
 };
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+    // Only allow POST method for webhooks
     if (req.method !== "POST") {
         res.setHeader("Allow", "POST");
         return res.status(405).json({ error: "method_not_allowed" });
@@ -19,19 +20,21 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
     const sig = req.headers["stripe-signature"];
     const secret = process.env.STRIPE_WEBHOOK_SECRET;
+
+    // Validate headers and server configuration
     if (!sig || typeof sig !== "string") return res.status(400).json({ error: "missing_signature" });
     if (!secret) return res.status(500).json({ error: "server_misconfigured" });
 
-    // 1) 生ボディ取得 → 署名検証
+    // 1) Verify signature using raw body
     let event: Stripe.Event;
     try {
-        const raw = await getRawBody(req); // Buffer が返る（グローバル Buffer でOK）
+        const raw = await getRawBody(req); // Returns Buffer, no import for Buffer needed
         event = stripe.webhooks.constructEvent(raw, sig, secret);
     } catch {
         return res.status(400).json({ error: "invalid_signature" });
     }
 
-    // 2) リプレイ防止（event.id を @unique で保存。重複なら即200）
+    // 2) Prevent replay attacks by storing unique event.id
     try {
         await prisma.eventLog.create({
             data: { eventId: event.id, type: event.type },
@@ -39,11 +42,11 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     } catch (e) {
         const isDup =
             e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002";
-        if (isDup) return res.status(200).json({ ok: true, replay: true });
+        if (isDup) return res.status(200).json({ ok: true, replay: true }); // Ignore duplicates
         return res.status(500).json({ error: "internal_error" });
     }
 
-    // 3) イベント別の処理（最小）
+    // 3) Handle event types (minimal example)
     try {
         switch (event.type) {
             case "checkout.session.completed": {
@@ -82,7 +85,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
             }
 
             default:
-                // 未対応は200でOK（再送を止める）
+                // Return 200 for unhandled events to stop further retries
                 break;
         }
 
