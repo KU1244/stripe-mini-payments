@@ -31,3 +31,13 @@ model PaymentRequest {
   status    String   @default("pending") // 'pending' | 'succeeded' | 'failed'
   createdAt DateTime @default(now()) // Timestamp when the record was created
 }
+
+// -----------------------------
+// Webhook idempotency log (prevents reprocessing on retries)
+// -----------------------------
+model EventLog {
+  id        String   @id @default(cuid()) // Internal unique ID
+  eventId   String   @unique // Stripe event.id (e.g., "evt_...")
+  type      String // Stripe event type (e.g., "checkout.session.completed")
+  createdAt DateTime @default(now()) // Recorded timestamp
+}
