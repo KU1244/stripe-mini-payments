@@ -1,7 +1,7 @@
 // src/pages/index.tsx
 import { useEffect, useState } from "react";
 
-// Cookieから値を取り出す関数
+// Helper: Read a specific cookie value
 function getCookie(name: string): string | undefined {
     return document.cookie
         .split("; ")
@@ -13,13 +13,13 @@ export default function Home() {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState("");
 
-    // ページを開いたときにCSRFクッキーをもらう
+    // Fetch CSRF cookie when the page loads
     useEffect(() => {
         fetch("/api/csrf", { credentials: "same-origin" })
-            .catch(() => setMessage("CSRF取得に失敗しました"));
+            .catch(() => setMessage("Failed to get CSRF token"));
     }, []);
 
-    // 支払いボタンが押されたとき
+    // Handle Stripe Checkout button click
     const handleCheckout = async () => {
         setLoading(true);
         setMessage("");
@@ -40,12 +40,13 @@ export default function Home() {
             const data = await res.json();
 
             if (res.ok && data.url) {
-                window.location.href = data.url; // Stripe決済ページへ遷移
+                // Redirect to Stripe Checkout page
+                window.location.href = data.url;
             } else {
-                setMessage(data.error || "不明なエラーです");
+                setMessage(data.error || "Unknown error occurred");
             }
         } catch {
-            setMessage("通信エラーが発生しました");
+            setMessage("Network error occurred");
         } finally {
             setLoading(false);
         }
@@ -55,7 +56,7 @@ export default function Home() {
         <main className="min-h-screen flex flex-col items-center justify-center bg-gray-50 text-gray-800">
             <div className="bg-white shadow-xl rounded-2xl p-8 w-[340px] text-center">
                 <h1 className="text-2xl font-bold mb-2">Mini Payment</h1>
-                <p className="text-gray-500 mb-6">$1.00 のテスト決済</p>
+                <p className="text-gray-500 mb-6">Test payment for $1.00</p>
 
                 <button
                     onClick={handleCheckout}
@@ -66,7 +67,7 @@ export default function Home() {
                             : "bg-blue-600 hover:bg-blue-700"
                     }`}
                 >
-                    {loading ? "処理中..." : "Stripeで支払う"}
+                    {loading ? "Processing..." : "Pay with Stripe"}
                 </button>
 
                 {message && (
@@ -74,7 +75,7 @@ export default function Home() {
                 )}
 
                 <p className="mt-6 text-xs text-gray-400">
-                    ※このボタンはStripeテスト環境で動作します。
+                    *This button works in the Stripe test environment.
                 </p>
             </div>
         </main>
